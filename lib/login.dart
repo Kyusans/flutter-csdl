@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:flutter_csdl/session_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 class Login extends StatefulWidget {
@@ -10,6 +13,58 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
+
+  void _login() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(
+      context,
+    );
+
+    try {
+      Map<String, String> jsonData = {
+        "username": _userIdController.text,
+        "password": _passwordController.text
+      };
+      Map<String, String> requestBody = {
+        "json": jsonEncode(jsonData),
+        "operation": "login",
+      };
+      var res = await http.post(
+        Uri.parse("${SessionStorage.url}users.php"),
+        body: requestBody,
+      );
+
+      if (res.body != "0") {
+        // goes to home page
+      } else {
+        scaffoldMessenger.showSnackBar(
+          const SnackBar(
+            content: Text("Invalid username or password"),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      setState(() {
+        _isLoading = false;
+      });
+    } catch (e) {
+      scaffoldMessenger.showSnackBar(
+        SnackBar(
+          content: Text("There was an unexpected error: $e"),
+          duration: const Duration(seconds: 5),
+        ),
+      );
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,16 +111,20 @@ class _LoginState extends State<Login> {
             SizedBox(
               width: double.infinity,
               child: MaterialButton(
-                onPressed: () {},
+                onPressed: _isLoading ? null : _login,
                 color: Colors.blue,
                 height: 60.0,
                 elevation: 5.0,
-                child: const Text(
-                  "Login",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+                child: _isLoading
+                    ? const CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      )
+                    : const Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
               ),
             ),
           ],
