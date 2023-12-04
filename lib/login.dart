@@ -14,6 +14,7 @@ class _LoginState extends State<Login> {
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _isObscure = true;
 
   void _login() async {
     setState(() {
@@ -37,7 +38,7 @@ class _LoginState extends State<Login> {
         Uri.parse("${SessionStorage.url}users.php"),
         body: requestBody,
       );
-
+      // print("print ni login: " + res.body);
       if (res.body != "0") {
         // goes to home page
       } else {
@@ -92,11 +93,18 @@ class _LoginState extends State<Login> {
               height: 16,
             ),
             TextFormField(
+              obscureText: _isObscure,
               controller: _passwordController,
               autofocus: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
                 labelText: "Password",
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() => _isObscure = !_isObscure);
+                  },
+                  icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+                ),
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
