@@ -1,3 +1,3 @@
 class SessionStorage {
-  static const String url = "http://localhost/api/";
+  static const String url = "http://localhost/csdl/api/";
 }
