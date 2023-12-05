@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_csdl/login.dart';
-// import 'package:flutter_csdl/qr_scanner.dart';
+import 'package:flutter_csdl/qr_scanner.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       // dark mode lang sah, kay sakit sa mata ang light mode hehe
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: const Login(),
+      home: const QrScanner(),
     );
   }
 }
