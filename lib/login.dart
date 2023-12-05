@@ -15,15 +15,12 @@ class _LoginState extends State<Login> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _isObscure = true;
+  late ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(context);
 
   void _login() async {
     setState(() {
       _isLoading = true;
     });
-
-    final ScaffoldMessengerState scaffoldMessenger = ScaffoldMessenger.of(
-      context,
-    );
 
     try {
       Map<String, String> jsonData = {
@@ -68,74 +65,76 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(16.0),
-        margin: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextFormField(
-              controller: _userIdController,
-              autofocus: true,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: "Id",
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          padding: const EdgeInsets.all(16.0),
+          margin: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextFormField(
+                controller: _userIdController,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Id",
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "This field is required";
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "This field is required";
-                }
-                return null;
-              },
-            ),
-            const SizedBox(
-              height: 16,
-            ),
-            TextFormField(
-              obscureText: _isObscure,
-              controller: _passwordController,
-              autofocus: true,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                labelText: "Password",
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() => _isObscure = !_isObscure);
-                  },
-                  icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+              const SizedBox(
+                height: 16,
+              ),
+              TextFormField(
+                obscureText: _isObscure,
+                controller: _passwordController,
+                autofocus: true,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: "Password",
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() => _isObscure = !_isObscure);
+                    },
+                    icon: Icon(_isObscure ? Icons.visibility : Icons.visibility_off),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "This field is required";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: MaterialButton(
+                  onPressed: _isLoading ? null : _login,
+                  color: Colors.blue,
+                  height: 60.0,
+                  elevation: 5.0,
+                  child: _isLoading
+                      ? const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      : const Text(
+                          "Login",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "This field is required";
-                }
-                return null;
-              },
-            ),
-            const SizedBox(
-              height: 24,
-            ),
-            SizedBox(
-              width: double.infinity,
-              child: MaterialButton(
-                onPressed: _isLoading ? null : _login,
-                color: Colors.blue,
-                height: 60.0,
-                elevation: 5.0,
-                child: _isLoading
-                    ? const CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      )
-                    : const Text(
-                        "Login",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
