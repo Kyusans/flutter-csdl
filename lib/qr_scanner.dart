@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_csdl/qrcode.dart';
 import 'package:flutter_csdl/student_information.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
@@ -34,7 +35,8 @@ class _QrScannerState extends State<QrScanner> {
                     if (res is String) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => StudentInformation(studentId: res),
+                          builder: (context) =>
+                              StudentInformation(studentId: res),
                         ),
                       );
                     }
@@ -42,6 +44,17 @@ class _QrScannerState extends State<QrScanner> {
                 },
                 child: const Text('Open Scanner'),
               ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomePage(),
+                    ),
+                  );
+                },
+                child: const Text("Generate QR code"),
+              )
             ],
           ),
         ),

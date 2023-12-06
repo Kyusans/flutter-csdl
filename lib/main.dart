@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       // dark mode lang sah, kay sakit sa mata ang light mode hehe
-      theme: ThemeData.dark(),
+      // theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home: const QrScanner(),
     );
